@@ -25,7 +25,7 @@ void setup()
 
     for(int i = 0; i < N; ++i){
         float x = sigmas * (i - N / 2) / (N - 1);
-        win[i] = 1.0 / sqrt(2.0 * 3.14159265) * exp( - x * x / 2.0);
+        win[i] = exp( - x * x / 2.0);
     }
 }
 
