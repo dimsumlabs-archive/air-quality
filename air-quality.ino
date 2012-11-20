@@ -9,6 +9,7 @@
  * Thanks to: Chris Nafis, http://www.howmuchsnow.com/arduino/airquality/grovedust/
  */
 
+#define RAW_OUTPUT 1              // 1 to output unprocessed data
 #define N 59                      // number of points in smoothing window
 
 const float sigmas = 6.0;         // standard deviations to smooth over
@@ -45,12 +46,16 @@ void loop()
 
     float occupancy = 0.0;
     float norm = 0.0;
-    /* convolve data with gaussian and normalize */
-    for(int i = 0; i < min(ndata, N); ++i){
-        occupancy += win[N - i - 1] * data[N - i - 1];
-        norm += win[N - i - 1];
+    if(RAW_OUTPUT){
+        occupancy = data[N - 1];
+    }else{
+        /* convolve data with gaussian and normalize */
+        for(int i = 0; i < min(ndata, N); ++i){
+            occupancy += win[N - i - 1] * data[N - i - 1];
+            norm += win[N - i - 1];
+        }
+        occupancy /= norm;
     }
-    occupancy /= norm;
 
     /* convert into concentration in particles per 0.01 cft */
     float concentration = 1.438e5 * pow(occupancy, 2.0) + 4.488e4 * occupancy;
