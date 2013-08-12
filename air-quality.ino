@@ -14,7 +14,7 @@
 
 const float sigmas = 6.0;         // standard deviations to smooth over
 const int pin = 7;                // PWM input pin
-const int secs = 30;              // measurement window
+const long secs = 300;              // measurement window
 float win[N] = {0.0};             // gaussian window
 float data[N] = {0.0};            // occupancy data
 unsigned long ndata = 0;          // number of data points logged
@@ -38,11 +38,11 @@ void loop()
     }
     ++ndata;
 	unsigned long time = millis();
-	unsigned long lotime = 0;
-	while(millis() - time < 1000 * secs){
-		lotime += pulseIn(pin, LOW);
-	};
-    data[N - 1] = (float) lotime / (1000 * (millis() - time));
+	double lotime = 0;
+	while(millis() - time < 1000.0 * secs){
+		lotime += 0.001 * pulseIn(pin, LOW);
+	}
+    data[N - 1] = lotime / (millis() - time);
 
     float occupancy = 0.0;
     float norm = 0.0;
